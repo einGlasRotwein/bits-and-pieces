@@ -87,7 +87,9 @@ digitcount %>%
 
 # UNICORN CONTENT
 # let's get the unicorn image
-unicorn <- "./pics/unicorn.png"
+# assuming your R project is in the main folder - if not, change
+# file path accordingly!
+unicorn <- "./benfords unicorn/pics/unicorn.png"
 
 # prepare data for the plot
 digitcount$plus <- digitcount$n + 10 # to adjust the image
@@ -119,4 +121,4 @@ digitcount$digit <- 1:9 # because we don't want a factor for the transition
 
 # in case you want to save the animation
 anim_save("unicorn.gif", plot_pink)
-anim_save("unicorn.gif", plot_rainbow)
+anim_save("unicorn_rainbow.gif", plot_rainbow)
