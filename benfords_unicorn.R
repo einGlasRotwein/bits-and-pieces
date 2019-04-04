@@ -105,5 +105,18 @@ digitcount$digit <- 1:9 # because we don't want a factor for the transition
     transition_reveal(digit)
 )
 
+# version with rainbow-coloured bars
+(
+  plot_rainbow <- 
+    ggplot(digitcount, aes(x = as.factor(digit), y = n)) +
+    geom_col(alpha = .8, colour = "black", fill = rainbow(9)) +
+    geom_image(aes(x = digit, y = n, image = image), size = .25) +
+    labs(x = "digit", y = "count") +
+    theme(axis.title = element_text(size = 16), 
+          axis.text = element_text(size = 14)) +
+    transition_reveal(digit)
+)
+
 # in case you want to save the animation
 anim_save("unicorn.gif", plot_pink)
+anim_save("unicorn.gif", plot_rainbow)
