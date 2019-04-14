@@ -77,7 +77,7 @@ First of all, let's work with a reduced data set because `diamonds` is huge and 
 diamonds_small <- diamonds %>%
   filter(color %in% c("E", "D", "J"), cut %in% c("Fair", "Very Good", "Ideal"),
          !clarity %in% c("I1", "IF", "SI2"), between(carat, .7, 2)) %>% 
-  mutate(clarity = factor(clarity))
+  mutate(clarity = factor(clarity), cut = factor(cut))
 ```
 
 Graphics work in layers. Like lasagna. Our first layer is the panel which we draw on. Which essentially means empty space, so we don't see anything when we pipe our data to the `ggplot` function.
@@ -296,6 +296,41 @@ diamonds_small %>%
   stat_summary() +
   stat_summary(fun.y = mean, geom = "line")
 ```
+
+### Add significance
+
+Want to have these fancy little asterisks in your plots? Check out `ggpubr` (for a detailed blog post, go [here](https://www.r-bloggers.com/add-p-values-and-significance-levels-to-ggplots/))! The default is a Kruskal Wallis test for the overall effect and Wilcoxon Tests for the pairwise comparisons, but we can specify an ANOVA and a t.test (better double check with your results anyways). The pairwise comparisons are already Bonferroni corrected.
+
+```{r}
+library(ggpubr)
+pairwise_comparisons <- list( c("Fair", "Very Good"), c("Very Good", "Ideal"), 
+                              c("Fair", "Ideal") )
+
+diamonds_small %>% 
+  ggplot(aes(x = cut, y = price)) +
+  stat_summary(fun.y = mean,
+               fun.ymax = function(x) mean(x) + sd(x),
+               fun.ymin = function(x) mean(x) - sd(x)) +
+  stat_compare_means(comparisons = pairwise_comparisons, method = "t.test") +
+  stat_compare_means(label.y = 50, method = "anova")
+```
+
+Fancy something a bit more minimalistic?
+
+```{r}
+pairwise_comparisons <- list( c("Fair", "Very Good"), c("Very Good", "Ideal"), 
+                              c("Fair", "Ideal") )
+
+diamonds_small %>% 
+  ggplot(aes(x = cut, y = price)) +
+  stat_summary(fun.y = mean,
+               fun.ymax = function(x) mean(x) + sd(x),
+               fun.ymin = function(x) mean(x) - sd(x)) +
+  stat_compare_means(comparisons = pairwise_comparisons, method = "t.test",
+                     label =  "p.signif", label.y = c(10000, 11000, 12000))
+```
+
+You can also speficy reference groups, it works for grouped plots as well ... possibilities are endless!
 
 ### Let's get wild
 There aren't many occasions where you can reasonably use animations in your plots. Still, it's good for impressing your peers at conferences or Twitter. There's much to be said about `gganimate` and getting into all of its functions would be a topic on its own. For now, let's consider these common examples: We can reveal a plot along its axes (if we want to keep the points we have to give them a group):
