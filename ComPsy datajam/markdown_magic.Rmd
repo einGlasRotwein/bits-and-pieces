@@ -14,7 +14,7 @@ header-includes:
 
 ### Chunk options
 
-We include code chunks in our document. We can specify the default chunk options using the `knitr` package which spares you some annoying copy-pasting. You can override them for individual chunks, though! Here, I want the raw code to be shown, so I set `echo = TRUE`. I also want the code to be executed, so I set `include = TRUE`. I also like to live dangerously and want to supress (?) any warning messages. And I'd like my figures to be centered.
+We include code chunks in our document. We can specify the default chunk options using the `knitr` package which spares you some annoying copy-pasting. You can override them for individual chunks, though! Here, I want the raw code to be shown, so I set `echo = TRUE`. I also want the code to be executed, so I set `include = TRUE`. I also like to live dangerously and want to supress any warning messages. And I'd like my figures to be centered.
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE, include = TRUE, message = FALSE, 
