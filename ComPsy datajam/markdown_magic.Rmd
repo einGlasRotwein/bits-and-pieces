@@ -1,7 +1,7 @@
 ---
 title: "Markdown Magic"
 author: "Juli Tkotz"
-date: "16 April 2019"
+date: "05 Mai 2019"
 output: 
   pdf_document:
     highlight: tango
@@ -25,6 +25,7 @@ knitr::opts_chunk$set(echo = TRUE, include = TRUE, message = FALSE,
 Example: `echo = TRUE` and `include = TRUE`:
 
 ```{r}
+## this is a comment
 print("I like lasagna.")
 ```
 
@@ -72,11 +73,10 @@ Now, let's have some truly sparkling (get it?) markdown magic. You can throw cod
 round(mean(diamonds$price), 2)
 ```
 
-
 ... directly in our text, which looks like this: `r round(mean(diamonds$price), 2)`. That comes in really handy when reporting statistics because you can just change the data source and all means, standard deviations and stuff you have in your text will change with it. 
 
 #### Printing statistical results
-There are also packages which make printing of results from statistical tests easier. For example, if we run a t-test (and calculate the effect size) on the price difference between fair (lowest level) and ideal (highest level) diamonds, we can print the output readily (?) formatted (?) in APA style.
+There are also packages which make printing of results from statistical tests easier. For example, if we run a t-test (and calculate the effect size) on the price difference between fair (lowest level) and ideal (highest level) diamonds, we can print the output readily formatted in APA style.
 
 ```{r}
 t_cut_price <- t.test(diamonds$price[diamonds$cut == "Fair"], 
@@ -101,6 +101,11 @@ library(prmisc)
 ```
 
 It appears that the ideal cut diamonds `r print_mean_sd(diamonds$price[diamonds$cut == "Ideal"])` are pricier than the fair cut ones `r print_mean_sd(diamonds$price[diamonds$cut == "Fair"])`, `r print_ttest(t_cut_price, d_cut_price)`.
+
+$$
+\mathrm{BF}_{01}=\frac{\int_{Z} p\left(\text { data } | \theta_{0}, \zeta, \mathcal{H}_{0}\right) p\left(\zeta | \theta_{0}, \mathcal{H}_{0}\right) \mathrm{d} \zeta}{\int_{\Theta} \int_{Z} p\left(\text { data } | \theta, \zeta, \mathcal{H}_{1}\right) p\left(\theta, \zeta | \mathcal{H}_{1}\right) \mathrm{d} \zeta \mathrm{d} \theta}
+$$
+
 
 ## Citations
 There is a vast amount of packages offering functions like this. I just shamelessly promote this one because it is from @R-prmisc and I contributed a bit. Also, it is a nice example to show you how citations work. You can see that we included a nice little .bib-file in our header. Now, we can just call citations by calling $@$[^escape], following the name I gave the reference: `@R-prmisc`
