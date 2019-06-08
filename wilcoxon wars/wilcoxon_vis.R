@@ -327,8 +327,8 @@ plot_pop06_01 <- as.data.frame(pop1) %>%
                  fill = "#9e0000") +
   labs(x = "rating", y = "count", title = "population 1", 
        subtitle = "06 - different gamma distributions") +
-  scale_y_continuous(labels = comma, breaks = seq(0, 500000, 100000),
-                     limits = c(0, 500000)) +
+  scale_y_continuous(labels = comma, breaks = seq(0, 200000, 50000),
+                     limits = c(0, 200000)) +
   julis_theme +
   facet_zoom(xlim = c(0, 8))
 
@@ -338,8 +338,8 @@ plot_pop06_02 <- as.data.frame(pop2) %>%
                  fill = "#9e0000") +
   labs(x = "rating", y = "count", title = "population 2", 
        subtitle = "06 - different gamma distributions") +
-  scale_y_continuous(labels = comma, breaks = seq(0, 500000, 100000),
-                     limits = c(0, 500000)) +
+  scale_y_continuous(labels = comma, breaks = seq(0, 200000, 50000),
+                     limits = c(0, 200000)) +
   julis_theme +
   facet_zoom(xlim = c(0, 8))
 
@@ -360,7 +360,7 @@ wilcox_war06 <- polish_wilcox(wilcox_war06)
                  geom = "point", position = pd, size = 5) +
     scale_shape_manual(values = c(15, 19)) +
     scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
-    scale_y_continuous(labels = percent) +
+    scale_y_continuous(labels = comma) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
          subtitle = "06 - different gamma distributions") +
@@ -381,8 +381,8 @@ plot_pop07_01 <- as.data.frame(pop1) %>%
                  fill = "#9e0000") +
   labs(x = "rating", y = "count", title = "population 1", 
        subtitle = "07 - Fagerland escalation") +
-  scale_y_continuous(labels = comma, breaks = seq(0, 500000, 100000),
-                     limits = c(0, 500000)) +
+  scale_y_continuous(labels = comma, breaks = seq(0, 400000, 100000),
+                     limits = c(0, 400000)) +
   julis_theme +
   facet_zoom(xlim = c(0, 8))
 
@@ -392,8 +392,8 @@ plot_pop07_02 <- as.data.frame(pop2) %>%
                  fill = "#9e0000") +
   labs(x = "rating", y = "count", title = "population 2", 
        subtitle = "07 - Fagerland escalation") +
-  scale_y_continuous(labels = comma, breaks = seq(0, 500000, 100000),
-                     limits = c(0, 500000)) +
+  scale_y_continuous(labels = comma, breaks = seq(0, 400000, 100000),
+                     limits = c(0, 400000)) +
   julis_theme +
   facet_zoom(xlim = c(0, 8))
 
