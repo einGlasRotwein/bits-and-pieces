@@ -37,9 +37,11 @@ interval_prop <- function(x, level = 0.95) {
 
 polish_wilcox <- function(wilcox_output) {
   wilcox_output <- wilcox_output %>% 
-    gather(test, p_value, t_p, w_p)
+    gather(test, p_value, t_p, t_vareq_p, w_p)
   wilcox_output <- wilcox_output %>% 
-    mutate(test = ifelse(test == "t_p", "t-test", "Wilcoxon"))
+    mutate(test = case_when(test == "t_p" ~ "t-test",
+                            test == "t_vareq_p" ~ "t-test vareq",
+                            test == "w_p" ~ "Wilcoxon"))
   # significant = 1; n.s. = 0
   wilcox_output <- wilcox_output %>% 
     mutate(sign = ifelse(p_value < .05, 1, 0))
@@ -81,7 +83,7 @@ julis_theme <- theme(legend.position = "top",
                      legend.text = element_text(size = 12), 
                      legend.title = element_text(size = 14))
 
-pd <- position_dodge(.45)
+pd <- position_dodge(.5)
 
 # seed (letters of "kill your darlings")
 kyd <- 11 +  9 + 12 + 12 + 
@@ -121,8 +123,8 @@ wilcox_war01 <- polish_wilcox(wilcox_war01)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = percent) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
@@ -162,8 +164,8 @@ wilcox_war02 <- polish_wilcox(wilcox_war02)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = percent) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
@@ -202,8 +204,8 @@ wilcox_war03 <- polish_wilcox(wilcox_war03)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = percent) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
@@ -250,8 +252,8 @@ wilcox_war04 <- polish_wilcox(wilcox_war04)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = percent) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
@@ -304,8 +306,8 @@ wilcox_war05 <- polish_wilcox(wilcox_war05)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = percent) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
@@ -358,8 +360,8 @@ wilcox_war06 <- polish_wilcox(wilcox_war06)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = comma) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
@@ -412,8 +414,8 @@ wilcox_war07 <- polish_wilcox(wilcox_war07)
                  position = pd, size = 1.3) +
     stat_summary(aes(shape = test), fun.data = "interval_prop", 
                  geom = "point", position = pd, size = 5) +
-    scale_shape_manual(values = c(15, 19)) +
-    scale_color_manual(values = c("#9e0000", "#2d2d2d")) +
+    scale_shape_manual(values = c(15, 19, 17)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a")) +
     scale_y_continuous(labels = percent) +
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",

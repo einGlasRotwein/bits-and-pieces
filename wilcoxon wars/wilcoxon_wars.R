@@ -39,8 +39,8 @@ masterstart <- Sys.time()
 t_vs_w <- function(ngroup = c(10, 50, 100), nsim = 1000, pop1, pop2 = pop1, 
                    name = NULL) {
   start <- Sys.time()
-  fillme <- matrix(nrow = nsim * length(ngroup), ncol = 3)
-  colnames(fillme) <- c("t_p", "w_p", "n")
+  fillme <- matrix(nrow = nsim * length(ngroup), ncol = 4)
+  colnames(fillme) <- c("t_p", "t_vareq_p", "w_p", "n")
   count <- 0
   
   for (i in ngroup) {
@@ -49,8 +49,10 @@ t_vs_w <- function(ngroup = c(10, 50, 100), nsim = 1000, pop1, pop2 = pop1,
       dat2 <- sample(pop2, i)
       
       t_test <- t.test(dat1, dat2)
+      t_test_varequ <- t.test(dat1, dat2, var.equal = TRUE)
       w_test <- wilcox.test(dat1, dat2, exact = FALSE)
       fillme[j + (count * nsim), "t_p"] <- t_test$p.value
+      fillme[j + (count * nsim), "t_vareq_p"] <- t_test_varequ$p.value
       fillme[j + (count * nsim), "w_p"] <- w_test$p.value
       fillme[j + (count * nsim), "n"] <- i
     }

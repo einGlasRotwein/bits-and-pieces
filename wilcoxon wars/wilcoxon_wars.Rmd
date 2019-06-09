@@ -25,7 +25,9 @@ Make sure to read Fagerland's paper for a far more rigorous and systematic appro
 This is Sparta.
 
 ### The simulation
-A population of 10 million ratings is generated for each restaurant. Then, samples of the following sizes (per restaurant) are drawn: 10, 50, 100, 200, 500, 1000, 2000, 3000, 4000. For each sample size, 10,000 samples of the respective size are drawn. Then, the two restaurants are compared with both, a t-test (Welch test) and a Wilcoxon rank sum (Mann Whitney U) test for independent samples. In seven different scenarios, parameters of the underlying populations are varied to examine the robustness of the two tests. In each of the scenarios, the mean of the two populations is the same. In scenarios 1 - 3, the two populations are exactly identical.
+A population of 10 million ratings is generated for each restaurant. Then, samples of the following sizes (per restaurant) are drawn: 10, 50, 100, 200, 500, 1000, 2000, 3000, 4000. For each sample size, 10,000 samples of the respective size are drawn. Then, the two restaurants are compared with both, a t-test (Welch test) and a Wilcoxon rank sum (Mann Whitney U) test for independent samples. When [Dale Barr](https://twitter.com/dalejbarr/status/1137672493857234944) came up with the very valid remark that the superior performance of the t-test might be due to `var.equal = FALSE`, I added another t-test with `var.equal = TRUE`.
+
+In seven different scenarios, parameters of the underlying populations are varied to examine the robustness of the two tests. In each of the scenarios, the mean of the two populations is the same. In scenarios 1 - 3, the two populations are exactly identical.
 
 ## 01 - default
 Normal distribution; integers from 1 - 10. Population 1 and 2 are identical.
