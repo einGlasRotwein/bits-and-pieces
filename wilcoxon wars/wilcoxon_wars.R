@@ -14,6 +14,7 @@
 
 #### PREPARATION ####
 library(tidyverse)
+library(coin)
 
 # Stop total time
 masterstart <- Sys.time()
@@ -33,14 +34,21 @@ masterstart <- Sys.time()
 #' @param name An optional name that is printed with the duration.
 #' 
 #' @return A data frame: 
-#'   The first column (t_p) holds the p-values returned from the t-test
-#'   The second column (w_p) holds the p-values returned from the Wilcoxon test
-#'   The third column (n) hold the group size
+#'   The first column (t_p) holds the p-values returned from the Welch t-test
+#'   The second column (t_vareq_p) holds the p-values returned from the t-test
+#'   with var.equal = TRUE
+#'   The third column (w_p) holds the p-values returned from the Wilcoxon test
+#'   The fourth column (perm_p) holds the p-values returned from a permutation
+#'   test (independence_test from the package coin)
+#'   The fifthcolumn (boot) holds the p-values returned from a bootstrapped
+#'   t-test (boot.ttest2 from the package Rfast)
+#'   The sixth column (n) hold the group size
 t_vs_w <- function(ngroup = c(10, 50, 100), nsim = 1000, pop1, pop2 = pop1, 
                    name = NULL) {
   start <- Sys.time()
-  fillme <- matrix(nrow = nsim * length(ngroup), ncol = 4)
-  colnames(fillme) <- c("t_p", "t_vareq_p", "w_p", "n")
+  
+  fillme <- matrix(nrow = nsim * length(ngroup), ncol = 6)
+  colnames(fillme) <- c("t_p", "t_vareq_p", "w_p", "perm_p", "boot_p", "n")
   count <- 0
   
   for (i in ngroup) {
@@ -48,12 +56,23 @@ t_vs_w <- function(ngroup = c(10, 50, 100), nsim = 1000, pop1, pop2 = pop1,
       dat1 <- sample(pop1, i)
       dat2 <- sample(pop2, i)
       
-      t_test <- t.test(dat1, dat2)
-      t_test_varequ <- t.test(dat1, dat2, var.equal = TRUE)
-      w_test <- wilcox.test(dat1, dat2, exact = FALSE)
+      dat <- data.frame(dat1 = dat1, dat2 = dat2)
+      dat <- tidyr::gather(dat, population, value, dat1, dat2)
+      dat$population <- factor(dat$population)
+      
+      t_test <- t.test(value ~ population, data = dat)
+      t_test_varequ <- t.test(value ~ population, data = dat, var.equal = TRUE)
+      w_test <- wilcox.test(value ~ population, data = dat, exact = FALSE)
+      perm_test <- coin::independence_test(value ~ population, data = dat,
+                                           distribution = "approximate")
+      boot <- Rfast::boot.ttest2(dat$value[dat$population == "dat1"], 
+                                 dat$value[dat$population == "dat2"])
+      
       fillme[j + (count * nsim), "t_p"] <- t_test$p.value
       fillme[j + (count * nsim), "t_vareq_p"] <- t_test_varequ$p.value
       fillme[j + (count * nsim), "w_p"] <- w_test$p.value
+      fillme[j + (count * nsim), "perm_p"] <- coin::pvalue(perm_test)
+      fillme[j + (count * nsim), "boot_p"] <- boot[2]
       fillme[j + (count * nsim), "n"] <- i
     }
     count <- count + 1
@@ -62,7 +81,7 @@ t_vs_w <- function(ngroup = c(10, 50, 100), nsim = 1000, pop1, pop2 = pop1,
   fillme$ID <- 1:nrow(fillme)
   
   stop <- Sys.time()
-  cat(name, "Dauer =", stop - start)
+  cat(name, "Duration =", stop - start)
   return(fillme)
 }
 
