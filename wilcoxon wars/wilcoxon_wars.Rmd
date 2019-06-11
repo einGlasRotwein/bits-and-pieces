@@ -30,13 +30,13 @@ A population of 10 million ratings is generated for each restaurant. Then, sampl
 In seven different scenarios, parameters of the underlying populations are varied to examine the robustness of the two tests.
 
 ## Under Construction
-When [Dale Barr](https://twitter.com/dalejbarr/status/1137672493857234944) came up with the very valid remark that the superior performance of the t-test might be due to `var.equal = FALSE`, I added another t-test with `var.equal = TRUE`. And then, quite a lot of people (e.g. [Anders Eklund](https://twitter.com/wandedob/status/1137726363157377025), [David Colquhoun](https://twitter.com/david_colquhoun/status/1137757426982236162) and [Devin Didericksen](https://twitter.com/didericksen/status/1137765263426953218)) pointed out that a permutation test would have been a good call. However, there was also the [objection](https://twitter.com/skornblith/status/1137768203956998147) that due to the different distributions, observations are not interchangeable and bootstrapping might work better. Hence, I added another round with a `independence_test` (`distribution = "approximate"`) from the package `coin`. And one more with `boot.ttest2` from the package `Rfast`. [Lars Juhl Jensen](https://twitter.com/larsjuhljensen/status/1138031870044717056) pointed out that in some cases, the means of my populations are the same, but the medians differ. So, I'm fixing that for the next runs.
+When [Dale Barr](https://twitter.com/dalejbarr/status/1137672493857234944) came up with the very valid remark that the superior performance of the t-test might be due to `var.equal = FALSE`, I added another t-test with `var.equal = TRUE`. And then, quite a lot of people (e.g. [Anders Eklund](https://twitter.com/wandedob/status/1137726363157377025), [David Colquhoun](https://twitter.com/david_colquhoun/status/1137757426982236162) and [Devin Didericksen](https://twitter.com/didericksen/status/1137765263426953218)) pointed out that a permutation test would have been a good call. However, there was also the [objection](https://twitter.com/skornblith/status/1137768203956998147) that due to the different distributions, observations are not interchangeable and bootstrapping might work better. Hence, I added another round with a `independence_test` (`distribution = "approximate"`) from the package `coin`. And one more with `boot.ttest2` from the package `Rfast`. [Lars Juhl Jensen](https://twitter.com/larsjuhljensen/status/1138031870044717056) pointed out that in some of my scenarios, the means of my populations are the same, but the medians differ. So, I'm fixing that for the next runs.
 
 This requires the analyses to be re-run, which takes some time. I'll update stuff step by step.
 
 ### TO DO
-- permutation test and bootstrap from run 3 onwards
-- same median for populations 4 - 7
+- permutation test and bootstrap from run 5 onwards
+- same median for populations 5 - 7
 
 ## 01 - default
 ```{r}
@@ -106,7 +106,7 @@ pre04_2 <- rnorm(pop, 5.5, 3)
 post04_2 <- burger(pre04_2)
 ```
 
-Different standard deviations between populations. Right after sampling: population 1 `r print_mean_sd(pre04_1)`; population 2 `r print_mean_sd(pre04_2)`. After conversion to integers from 1 - 10: population 1 `r print_mean_sd(post04_1)`; population 2 `r print_mean_sd(post04_2)`.
+Different standard deviations between populations. Right after sampling: population 1 `r print_mean_sd(pre04_1, parentheses = FALSE)`, median = `r round(median(pre04_1), 2)`, skewness = `r round(skewness(pre04_1))`; population 2 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`. After conversion to integers from 1 - 10: population 1 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`; population 2 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`.
 
 ```{r}
 plot_pop04
