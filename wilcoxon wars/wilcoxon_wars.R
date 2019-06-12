@@ -108,6 +108,14 @@ ordinal_burgers <- function(ratings) {
                        ratings %in% 9:10 ~ 3)
 }
 
+# function to generate a lognormal distribution with specified mean and sd
+lognorm_spec <- function(mean, sd){
+  location <- log(mean^2 / sqrt(sd^2 + mean^2))
+  shape <- sqrt(log(1 + (sd^2 / mean^2)))
+  
+  return(c("meanlog" = location, "sdlog" = shape))
+}
+
 # Odds and ends
 
 # Seed
@@ -171,9 +179,23 @@ pop2 <- burger(pop2)
 wilcox_war04 <- t_vs_w(ngroup = stpr, nsim = nsim, pop1 = pop1, pop2 = pop2, 
                        name = "04 - different SDs")
 
+#### 04a ####
+# Supposed to be lognormal, but did not work
+params1 <- lognorm_spec(40, .5)
+params2 <- lognorm_spec(40, 1)
+
+set.seed(kyd)
+pop1 <- round(rlnorm(pop, params1[1], params1[2]))
+pop2 <- round(rlnorm(pop, params2[1], params2[2]))
+
+wilcox_war04a <- t_vs_w(ngroup = stpr, nsim = nsim, pop1 = pop1, pop2 = pop2, 
+                       name = "04a - still kinda normal")
+
 #### 05 ####
 # similar to Fagerland (2012)
 # two lognormal distributions
+# same mean and median, different sd
+# TO DO: find lognormal with same median and mean, but still lognormal
 set.seed(kyd)
 pop1 <- rlnorm(pop, sdlog = .72)
 pop2 <- rlnorm(pop, sdlog = .3)
@@ -218,5 +240,5 @@ masterstop<- Sys.time()
 
 # Save output so simulations won't have to be run again
 save(list = c("wilcox_war01", "wilcox_war02", "wilcox_war03", "wilcox_war04",
-              "wilcox_war05", "wilcox_war06", "wilcox_war07"), 
+              "wilcox_war04a", "wilcox_war05", "wilcox_war06", "wilcox_war07"), 
      file = "wilcoxon_wars_data.RData")

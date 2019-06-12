@@ -75,6 +75,14 @@ ordinal_burgers <- function(ratings) {
                        ratings %in% 9:10 ~ 3)
 }
 
+# function to generate a lognormal distribution with specified mean and sd
+lognorm_spec <- function(mean, sd){
+  location <- log(mean^2 / sqrt(sd^2 + mean^2))
+  shape <- sqrt(log(1 + (sd^2 / mean^2)))
+  
+  return(c("meanlog" = location, "sdlog" = shape))
+}
+
 # Odds and ends
 
 # population
@@ -263,6 +271,54 @@ wilcox_war04 <- polish_wilcox(wilcox_war04)
     labs(x = "group size", y = "proportion p < .05", 
          title = "proportion of significant results",
          subtitle = "04 - different SDs") +
+    julis_theme
+)
+
+#### 4a - DIFFERENT SDS STILL KINDA NORMAL ####
+params1 <- lognorm_spec(40, .5)
+params2 <- lognorm_spec(40, 1)
+
+set.seed(kyd)
+pop1 <- round(rlnorm(pop, params1[1], params1[2]))
+pop2 <- round(rlnorm(pop, params2[1], params2[2]))
+
+forplot_pop04a <- data.frame(pop = rep(c("pop1", "pop2"), each = pop),
+                            value = c(pop1, pop2))
+
+(
+  plot_pop04a <- forplot_pop04a %>% 
+    ggplot(aes(x = value)) +
+    geom_histogram(binwidth = 1, alpha = .7, colour = "black", 
+                   fill = "#9e0000") +
+    scale_x_continuous(breaks = seq(37, 44, 1)) +
+    labs(x = "rating", y = "count", title = "population", 
+         subtitle = "04a - still kinda normal") +
+    scale_y_continuous(labels = comma) +
+    facet_wrap(~pop, nrow = 2) +
+    julis_theme
+)
+
+wilcox_war04a <- polish_wilcox(wilcox_war04a)
+
+(
+  tab_04a <- wilcox_war04a %>% 
+    group_by(test, n) %>% 
+    bow(tie(y, ymin, ymax) := interval_prop(sign))
+)
+
+(
+  plot_out04a <- wilcox_war04a %>%
+    ggplot(aes(x = factor(n), y = sign, colour = test)) + 
+    stat_summary(fun.data = "interval_prop", geom = "errorbar", width = .1, 
+                 position = pd, size = 1.3) +
+    stat_summary(aes(shape = test), fun.data = "interval_prop", 
+                 geom = "point", position = pd, size = 3.5) +
+    scale_shape_manual(values = c(15, 19, 17, 18, 4, 10)) +
+    scale_color_manual(values = c("#9e0000", "#2d2d2d", "#19a98a", "#e0bf07", "#0c00c4", "#0aaa00")) +
+    scale_y_continuous(labels = percent) +
+    labs(x = "group size", y = "proportion p < .05", 
+         title = "proportion of significant results",
+         subtitle = "04a - still kinda normal") +
     julis_theme
 )
 
