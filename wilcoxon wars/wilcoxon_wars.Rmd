@@ -35,8 +35,9 @@ When [Dale Barr](https://twitter.com/dalejbarr/status/1137672493857234944) came 
 This requires the analyses to be re-run, which takes some time. I'll update stuff step by step.
 
 ### TO DO
-- permutation test and bootstrap from run 5 onwards
-- same median for populations 5 - 7
+- Permutation test and bootstrap from scenario 5 onwards.
+- Same median for populations 5 - 7
+    - Turns out, this is harder than it looks. I found a function meant to create something like this (and cheated a bit with rounding), but the distribution looks rather normal than lognormal. I included the example as 04a and keep working on the last scenarios.
 
 ## 01 - default
 ```{r}
@@ -116,17 +117,37 @@ plot_pop04
 plot_out04
 ```
 
-## 05 - Different lognormal distributions
+## 04a - different SDs, still kinda normal
 ```{r}
-set.seed(kyd)
-pop1 <- rlnorm(pop, sdlog = .72)
-pop2 <- rlnorm(pop, sdlog = .3)
+params1 <- lognorm_spec(40, .5)
+params2 <- lognorm_spec(40, 1)
 
-diff <- mean(pop1) - mean(pop2)
-pop2 <- pop2 + diff
+set.seed(kyd)
+pop1 <- round(rlnorm(pop, params1[1], params1[2]))
+pop2 <- round(rlnorm(pop, params2[1], params2[2]))
 ```
 
-Similar to Fagerland: Two lognormal distributions with different SDs. Population 2 was shifted to the same mean as population 1. Note that Fagerland had a more elegant approach where the two distributions differed only in SD while mine also have a different skewness. population 1: `r print_mean_sd(pop1)`, skewness = `r round(skewness(pop1), 2)`; population 2: `r print_mean_sd(pop2)`, skewness = `r round(skewness(pop2), 2)`.
+Initially, I tried to create lognormal distributions with a specified mean and sd (and the same median). To achieve the exakt same means and medians, I rounded the distribution. Turns out, they were rather normal than anything else. I included the example nevertheless: population 1 `r print_mean_sd(pop1, parentheses = FALSE)`, median = `r round(median(pop1), 2)`, skewness = `r round(skewness(pop1), 2)`; population 2 `r print_mean_sd(pop2, parentheses = FALSE)`, median = `r round(median(pop2), 2)`, skewness = `r round(skewness(pop2), 2)`.
+
+```{r}
+plot_pop04a
+```
+
+```{r}
+plot_out04a
+```
+
+## 05 - Different lognormal distributions
+```{r}
+params1 <- lognorm_spec(40, .5)
+params2 <- lognorm_spec(40, 1)
+
+set.seed(kyd)
+pop1 <- round(rlnorm(pop, params1[1], params1[2]))
+pop2 <- round(rlnorm(pop, params2[1], params2[2]))
+```
+
+Similar to Fagerland: Two lognormal distributions with different SDs, but same mean and median: population 1 `r print_mean_sd(pop1, parentheses = FALSE)`, median = `r round(median(pop1), 2)`, skewness = `r round(skewness(pop1), 2)`; population 2 `r print_mean_sd(pop2, parentheses = FALSE)`, median = `r round(median(pop2), 2)`, skewness = `r round(skewness(pop2), 2)`.
 
 ```{r}
 plot_pop05_01
