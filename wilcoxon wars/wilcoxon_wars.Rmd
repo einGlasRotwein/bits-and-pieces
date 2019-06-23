@@ -107,7 +107,7 @@ pre04_2 <- rnorm(pop, 5.5, 3)
 post04_2 <- burger(pre04_2)
 ```
 
-Different standard deviations between populations. Right after sampling: population 1 `r print_mean_sd(pre04_1, parentheses = FALSE)`, median = `r round(median(pre04_1), 2)`, skewness = `r round(skewness(pre04_1))`; population 2 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`. After conversion to integers from 1 - 10: population 1 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`; population 2 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`.
+Different standard deviations between populations. Right after sampling: population 1 `r print_mean_sd(pre04_1, parentheses = FALSE)`, median = `r round(median(pre04_1), 2)`, skewness = `r round(skewness(pre04_1))`; population 2 `r print_mean_sd(pre04_2, parentheses = FALSE)`, median = `r round(median(pre04_2), 2)`, skewness = `r round(skewness(pre04_2))`. After conversion to integers from 1 - 10: population 1 `r print_mean_sd(post04_1, parentheses = FALSE)`, median = `r round(median(post04_1), 2)`, skewness = `r round(skewness(post04_1))`; population 2 `r print_mean_sd(post04_2, parentheses = FALSE)`, median = `r round(median(post04_2), 2)`, skewness = `r round(skewness(post04_2))`.
 
 ```{r}
 plot_pop04
