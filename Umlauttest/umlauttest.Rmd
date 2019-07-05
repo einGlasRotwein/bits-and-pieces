@@ -1,0 +1,33 @@
+---
+title: "Umlauttest"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+source("umlautplot.R")
+
+# Fixes it
+# source("umlautplot.R", encoding = "UTF-8")
+```
+
+```{r}
+# Works: Generated in .Rmd file
+(
+  umlautplot2 <- diamonds %>% 
+    ggplot(aes(x = cut, y = price)) +
+    stat_summary() +
+    labs(x = "Label mit Umläuten")
+)
+```
+
+```{r}
+# Doesn't work: Called from umlautplot.R
+# Works fine when calling it within umlautplot.R, though.
+umlautplot
+```
+
+```{r}
+# Works: Called from the plot generated within the .Rmd
+umlautplot2
+```
