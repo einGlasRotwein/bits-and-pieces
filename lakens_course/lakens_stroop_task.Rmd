@@ -1,0 +1,22 @@
+---
+title: "Lakens Stroop Task"
+author: "Juli Tkotz"
+date: "30 10 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Download data initially.
+# stroop_data <- read.table(
+#   "https://raw.githubusercontent.com/Lakens/Stroop/master/stroop.txt", 
+#   sep = "\t", header = TRUE
+# )  
+# write.table(stroop_data, file = "stroop.csv", quote = FALSE, row.names = FALSE)
+
+# Load data from downloaded file.
+stroop_data <- read.csv("stroop.csv", sep = " ", header = TRUE)
+```
