@@ -1,0 +1,123 @@
+---
+title: "Fun with brackets"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ghostly column names
+Yesterday, I was writing a function which returned a dataframe - but something was off. Miraculously, one of the column names had changed. The name of the new column I had attached to the dataframe was not what I had set it to, but a duplicate of one of the other columns instead. Here is a simplified version of the problem:
+
+```{r}
+(exp_frame <- data.frame(col1 = 1:5, col2 = 21:25)) # example dataframe
+named_vec <- c("name1" = 2, "name2" = 4, "name3" = 6) # named vector of values to multiply the df with
+```
+
+The new column is created by multiplying one existing column of my dataframe (`col1`) with the second element of the named vector (`named_vec`), which I access using `[]`. In a similar manner, I access `col1` with square brackets.
+
+```{r}
+exp_frame$new_col <- exp_frame["col1"] * named_vec["name2"]
+```
+
+When we call the dataframe in the console, we see that the third column is now called `col1`, like my first column, even though I named it `new_col`.
+
+```{r}
+exp_frame
+```
+
+Funnily enough, the names still seem correct!
+
+```{r}
+names(exp_frame)
+```
+
+... and I can even access the third colum with `new_col`.
+
+```{r}
+exp_frame$new_col
+```
+
+## Access columns in a dataframe
+For some of you, the problem might already be obvious in my code: It is the way I access `col1` in my dataframe. In principle, I knew that different ways of accessing data in dataframes will return different data formats, but still, this is an error that can easily go unnoticed. So, keep in mind that ...
+
+... `$` will return a vector.
+```{r}
+exp_frame$col1
+```
+
+... `[[]]` will return a vector.
+```{r}
+exp_frame[["col1"]]
+```
+
+... but `[]` will return a dataframe!
+```{r}
+exp_frame["col1"]
+```
+
+## Dataframe inception
+By now, you can guess what happened: The `new_col` in my dataframe doesn't contain a vector - but a one-column dataframe. You immediately recognise this in the case where the dataframe stored in another dataframe's column has more than one column:
+
+```{r}
+exp_frame <- data.frame(col1 = 1:5, col2 = 21:25)
+exp_frame$new_col <- data.frame(second_col1 = 101:105, second_col2 = 121:125)
+exp_frame
+```
+
+In the special case of a one-column dataframe, however, the new column's name seemingly gets replaced with the name of the single column of the dataframe stored within the new column. Quite a headache.
+
+I assume that most people are not familiar with the idea of columns in dataframes containing anything else than vectors. Or comfortable with it. Indeed, something like this doesn't look like anything that should be allowed to happen:
+
+```{r}
+exp_frame <- data.frame(col1 = 1:5, col2 = 21:25)
+exp_frame$new_col <- data.frame(second_col1 = 101:105, second_col2 = 121:125)
+exp_frame$new_col$second_col2 <- data.frame(third_col1 = 201:205, third_col2 = 221:225)
+exp_frame
+```
+
+One reassuring thought is that the dataframes that are stacked into each other have to contain the same number of rows:
+
+```{r}
+exp_frame <- data.frame(col1 = 1:5, col2 = 21:25)
+try(exp_frame$new_col <- data.frame(second_col1 = 1:2, second_col2 = 3:4))
+```
+
+## Let's get wild
+You can also put lists into colums, as long as the number of elements in the list is equal to the number of rows in the dataframe:
+
+```{r}
+exp_frame <- data.frame(col1 = 1:5, col2 = 21:25)
+exp_frame$new_col <- list(element1 = 1:2, element2 = 3:4, element3 = 5:6, 
+                          element4 = 7:8, element5 = 9:10)
+exp_frame
+```
+
+See how the second row now corresponds to the second element of the list?
+```{r}
+exp_frame$new_col[2]
+```
+
+That way, we can basically store dataframes in the cells of a dataframe!
+
+```{r}
+exp_frame <- data.frame(col1 = 1:5, col2 = 21:25)
+exp_frame$new_col <- list(element1 = data.frame(listcol1 = 1:10, listcol2 = 1:10), 
+                          element2 = 3:4, element3 = 5:6, 
+                          element4 = 7:8, element5 = 9:10)
+exp_frame
+```
+
+Pretty wild, huh?
+
+```{r}
+exp_frame$new_col[1]
+```
+
+Of course, nested data structures are nothing special and users of other languages might not at all be impressed by this. However, I guess the typical `R` user probably uses lists for this kind of scenario and generally works with dataframes in a more "restricted" way.
+
+## This wouldn't have happened in rmarkdown
+What I show you here is the output as you would see it in the console. However, writing this post I realise that things looke quite different when running the chunks inside my `rmarkdown` document. I encourage you to download the `.Rmd` [here](https://github.com/einGlasRotwein/bits-and-pieces/tree/master/Umlauttest). What you will see is that the preview explicitly shows you what kind of datatype you are dealing with in each column. The structure of the output also makes it easier to recognise what is going on.
+
+What I'm trying to say is: Don't be like me. Keep in mind that the number of `[`s matters when working with dataframes. `R` might surprise you with some quirky behaviour at times, which was quite fun to explore.
