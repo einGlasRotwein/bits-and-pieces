@@ -52,6 +52,11 @@ exp_frame$col1
 exp_frame[["col1"]]
 ```
 
+... `[ , ]` will return a vector.
+```{r}
+exp_frame[ , "col1"]
+```
+
 ... but `[]` will return a dataframe!
 ```{r}
 exp_frame["col1"]

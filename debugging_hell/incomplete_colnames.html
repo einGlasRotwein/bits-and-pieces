@@ -412,11 +412,17 @@ not_cool_r$inc</code></pre>
 <div id="how-to-prevent-this" class="section level2">
 <h2>How to prevent this</h2>
 <p>Sure, you can get around this with clever naming. However, with various variable amd column names, you might lose track at some point. At least I didn’t think that <code>sub_id</code> (subject ID) and <code>sub_i</code> (subject intercept) would be a problem.</p>
-<p>So, a foolproof way is to access the column via <code>[[]]</code> (not <code>[]</code>, see <a href="https://einglasrotwein.github.io/brackets">here</a>).</p>
+<p>So, a foolproof way is to access the column via <code>[[]]</code>, which will give you <code>NULL</code>.</p>
 <pre class="r"><code>not_cool_r[[&quot;incomplete_colname&quot;]]</code></pre>
 <pre><code>## [1] 4 5 6</code></pre>
 <pre class="r"><code>not_cool_r[[&quot;incomplete_colnam&quot;]]</code></pre>
 <pre><code>## NULL</code></pre>
+<p>Or use <code>[ , ]</code>, which will give you an error (but don’t use <code>[]</code>, see <a href="https://einglasrotwein.github.io/brackets">here</a>).</p>
+<pre class="r"><code>not_cool_r[ , &quot;incomplete_colname&quot;]</code></pre>
+<pre><code>## [1] 4 5 6</code></pre>
+<pre class="r"><code>try(not_cool_r[ , &quot;incomplete_colnam&quot;])</code></pre>
+<pre><code>## Error in `[.data.frame`(not_cool_r, , &quot;incomplete_colnam&quot;) : 
+##   undefined columns selected</code></pre>
 <p>For you <code>tidyverse</code> kids out there: The standard tidy syntax doesn’t do this …</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre class="r"><code>not_cool_r %&gt;% 
@@ -429,7 +435,7 @@ not_cool_r$inc</code></pre>
   not_cool_r %&gt;% 
     mutate(new_col = incomplete_colnam * 2)
 )</code></pre>
-<pre><code>## Error : object &#39;incomplete_colnam&#39; not found</code></pre>
+<pre><code>## Error : Objekt &#39;incomplete_colnam&#39; nicht gefunden</code></pre>
 <p>… and tibbles will give you a warning.</p>
 <pre class="r"><code>not_cool_r &lt;- tibble(col1 = 1:3, incomplete_colname = 4:6, incomp = 7:9)
 
