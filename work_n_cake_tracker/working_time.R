@@ -1,4 +1,8 @@
 
+# A script for tracking working time and importantly, the number of cakes.
+
+# All functions needed to run the script. I assume that your R project/working directory is in the folder where
+# all the scripts from the work_n_cake_tracker folder lie. Otherwise, you'd need to change all the file paths.
 source("./working_time_under_the_hood.R")
 
 # If you get the following warning:
